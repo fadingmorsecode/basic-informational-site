@@ -3,11 +3,12 @@ const fs = require('fs');
 
 http
   .createServer((req, res) => {
-    let reqURL = req.url.slice(1);
-    if (reqURL === '') {
-      reqURL = 'index';
+    let { url } = req;
+    url = url.slice(1);
+    if (url === '') {
+      url = 'index';
     }
-    fs.readFile(`${reqURL}.html`, function (err, data) {
+    fs.readFile(`${url}.html`, function (err, data) {
       if (err) {
         fs.readFile('404.html', function (err, errdata) {
           res.writeHead(404, { 'Content-Type': 'text/html' });
