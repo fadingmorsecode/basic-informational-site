@@ -1,25 +1,20 @@
-const http = require('http');
-const fs = require('fs');
+require('dotenv').config();
+const express = require('express');
+const app = express();
+const path = require('path');
 
-http
-  .createServer((req, res) => {
-    let { url } = req;
-    url = url.slice(1);
-    if (url === '') {
-      url = 'index';
-    }
-    fs.readFile(`${url}.html`, function (err, data) {
-      if (err) {
-        fs.readFile('404.html', function (err, errdata) {
-          res.writeHead(404, { 'Content-Type': 'text/html' });
-          res.write(errdata);
-          res.end();
-        });
-        return;
-      }
-      res.writeHead(200, { 'Content-Type': 'text/html' });
-      res.write(data);
-      res.end();
-    });
-  })
-  .listen(8080);
+app.get('/', function (req, res) {
+  res.sendFile(path.join(__dirname, 'pages', 'index.html'));
+});
+app.get('/about', function (req, res) {
+  res.sendFile(path.join(__dirname, 'pages', 'about.html'));
+});
+app.get('/contact-me', function (req, res) {
+  res.sendFile(path.join(__dirname, 'pages', 'contact-me.html'));
+});
+app.get('*', function (req, res) {
+  res.sendFile(path.join(__dirname, 'pages', '404.html'), 404);
+});
+
+const port = process.env.PORT;
+app.listen(port);
